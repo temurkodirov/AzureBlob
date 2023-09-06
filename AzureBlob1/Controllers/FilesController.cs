@@ -22,6 +22,23 @@ namespace AzureBlob1.Controllers
             return Ok(result);
         }
 
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var response = await _fileService.UploadAsync(file);
+
+            if (response.Error)
+            {
+                return BadRequest(response.Status);
+            }
+
+            return Ok(response);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)

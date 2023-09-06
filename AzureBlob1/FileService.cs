@@ -1,8 +1,5 @@
-﻿using Azure.Core;
-using Azure.Storage;
+﻿using Azure.Storage;
 using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace AzureBlob1;
 
@@ -10,7 +7,7 @@ public class FileService
 {
     private readonly string _storageAccount = "databaza7730";
     private readonly string _key = "eMDy0vMBqb/3O6AQp8Oj3QVXdkARXtxRPZeq5Uqc1gtScDlZgQvvUrShcZNKByUsfDOwRSTKJdsx+AStk1Kxig==";
-    
+
     private readonly BlobContainerClient _filesContainer;
 
 
@@ -60,6 +57,7 @@ public class FileService
     }
 
 
+
     public async Task<BlobDto?> DownlaodAsync(string blobFilename)
     {
         BlobClient file = _filesContainer.GetBlobClient(blobFilename);
@@ -90,6 +88,6 @@ public class FileService
 
     }
 
-   
+
 
 }
