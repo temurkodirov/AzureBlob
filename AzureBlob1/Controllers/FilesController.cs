@@ -40,14 +40,7 @@ namespace AzureBlob1.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
-        {
-            var result = _fileService.UploadAsync(file);
-            return Ok(result);
-        }
-
-
+  
         [HttpGet]
         [Route("filename")]
         public async Task<IActionResult> Download(string filename)
