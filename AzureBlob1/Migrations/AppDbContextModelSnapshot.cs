@@ -65,11 +65,19 @@ namespace AzureBlob1.Migrations
                     b.Property<double>("VideoDuration")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("VideoImagePath")
+                    b.Property<string>("VideoImageName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("VideoPath")
+                    b.Property<string>("VideoImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VideoName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VideoUrl")
                         .IsRequired()
                         .HasColumnType("text");
 
