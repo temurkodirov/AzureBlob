@@ -1,12 +1,11 @@
 using AzureBlob1.Configurations;
 using AzureBlob1.Contexts;
+using AzureBlob1.Middlewares;
 using AzureBlob1.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddHostedService<BackgroundWorkerService>();
@@ -28,11 +27,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefualtConnection"));
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.ConfigureJwtAuth();
-//builder.ConfigureCORSPolicy();
+
 
 builder.Services.AddCors(options =>
 {
@@ -44,6 +43,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
 builder.ConfigureSwaggerAuth();
 
 builder.Services.AddSingleton<FileService>();
@@ -56,10 +56,10 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("MyPolicy");
 app.UseHttpsRedirection();
-
+app.UseCors("MyPolicy");
 app.UseStaticFiles();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 

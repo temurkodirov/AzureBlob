@@ -34,7 +34,7 @@ public class VideoController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateAsync([FromForm] VideoDto dto)
     {
         var validator = new VideoValidator();
@@ -57,6 +57,7 @@ public class VideoController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAsync(long id)
     {
         var result = await _service.DeleteAsync(id);

@@ -36,7 +36,7 @@ public class AdminController : ControllerBase
 
 
     [HttpPost("create")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromForm] AdminCreateDto dto)
     {
         var result = await _adminService.CreateAsync(dto);
