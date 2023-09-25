@@ -50,6 +50,11 @@ namespace AzureBlob1.Services
                     {
                         foreach (string name in names)
                         {
+                            if (name == "gitignore")
+                            {
+                                continue;
+                            }
+
                             using (IServiceScope scope = _serviceProvider.CreateScope())
                             {
                                 var _repository = scope.ServiceProvider.GetRequiredService<IRepository<Video>>();
@@ -66,6 +71,7 @@ namespace AzureBlob1.Services
                                    .ToArray();
                                 foreach (string file in VideosWithName)
                                 {
+                                    if (file == "gitignore") continue;
                                     // Process each file
 
                                     var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
@@ -108,6 +114,7 @@ namespace AzureBlob1.Services
 
                                 foreach (string file in ImagesWithName)
                                 {
+                                    if (file == "gitignore") continue;
                                     // Process each file
 
                                     var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
