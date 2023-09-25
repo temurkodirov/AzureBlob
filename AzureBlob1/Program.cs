@@ -59,7 +59,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 app.UseHttpsRedirection();
 app.UseCors("MyPolicy");
-app.UseCors("AllowAll");
 app.UseStaticFiles();
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseAuthentication();
