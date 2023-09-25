@@ -2,6 +2,7 @@ using AzureBlob1.Configurations;
 using AzureBlob1.Contexts;
 using AzureBlob1.Middlewares;
 using AzureBlob1.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,8 +31,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 builder.ConfigureJwtAuth();
-
 
 builder.Services.AddCors(options =>
 {
@@ -45,7 +46,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.ConfigureSwaggerAuth();
-
+builder.ConfigureCORSPolicy();
 builder.Services.AddSingleton<FileService>();
 builder.Services.AddCustomServices();
 var app = builder.Build();
@@ -58,8 +59,10 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 app.UseHttpsRedirection();
 app.UseCors("MyPolicy");
+app.UseCors("AllowAll");
 app.UseStaticFiles();
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
