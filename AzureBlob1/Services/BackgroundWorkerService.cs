@@ -50,15 +50,10 @@ namespace AzureBlob1.Services
                     {
                         foreach (string name in names)
                         {
-                            if (name == "gitignore")
-                            {
-                                continue;
-                            }
-
                             using (IServiceScope scope = _serviceProvider.CreateScope())
                             {
                                 var _repository = scope.ServiceProvider.GetRequiredService<IRepository<Video>>();
-                                var _videoDuration = scope.ServiceProvider.GetRequiredService<IVideoDurationHelper>();
+                                //var _videoDuration = scope.ServiceProvider.GetRequiredService<IVideoDurationHelper>();
 
                                 Video saveVideo = new Video();
 
@@ -71,14 +66,15 @@ namespace AzureBlob1.Services
                                    .ToArray();
                                 foreach (string file in VideosWithName)
                                 {
-                                    if (file == "gitignore") continue;
                                     // Process each file
 
                                     var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
                                     var video = new FormFile(baseStream: fileStream, baseStreamOffset: 0,
                                         length: new FileInfo(file).Length, name: Guid.NewGuid().ToString(), fileName: Path.GetFileName(file));
 
-                                    saveVideo.VideoDuration = await _videoDuration.GetVideoDurationAsync(video);
+                                    saveVideo.VideoDuration = 550;
+                                   // saveVideo.VideoDuration = await _videoDuration.GetVideoDurationAsync(video);
+
                                     saveVideo.VideoName = video.FileName;
 
                                     //BlobUploadOptions videoUploadOptions = new BlobUploadOptions
@@ -114,7 +110,6 @@ namespace AzureBlob1.Services
 
                                 foreach (string file in ImagesWithName)
                                 {
-                                    if (file == "gitignore") continue;
                                     // Process each file
 
                                     var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
