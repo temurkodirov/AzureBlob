@@ -46,8 +46,18 @@ namespace AzureBlob1.Controllers
         [Route("filename")]
         public async Task<IActionResult> Download(string filename)
         {
-            var result = await _fileService.DownlaodAsync(filename);
-            return File(result.Content, result.ContentType, result.Name);
+            var result = await _fileService.DownloadAsync(filename);
+
+            if (result != null)
+            {
+                // Return the blob content as a file.
+                return File(result, "application/octet-stream", filename);
+            }
+            else
+            {
+                // Handle the case where the blob doesn't exist, perhaps return a not found response.
+                return NotFound("Blob not found");
+            }
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using NReco.VideoInfo;
+
 namespace AzureBlob1.Helpers;
 
 public class VideoDurationHelper : IVideoDurationHelper
@@ -8,7 +9,7 @@ public class VideoDurationHelper : IVideoDurationHelper
         if (videoFile == null || videoFile.Length == 0)
         {
             // Handle invalid input gracefully.
-            return 0.0; // Or throw an exception or return an error message.
+            return 0; // Or throw an exception or return an error message.
         }
 
         // Create a temporary file to save the uploaded video.
@@ -25,13 +26,7 @@ public class VideoDurationHelper : IVideoDurationHelper
 
         // Delete the temporary file.
         File.Delete(tempFilePath);
-
+        
         return videoInfo.Duration.TotalSeconds;
     }
 }
-
-
-
-
-
-

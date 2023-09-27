@@ -1,7 +1,6 @@
 ﻿using Azure.Storage;
 using Azure.Storage.Blobs;
 using AzureBlob1.Dtos;
-using AzureBlob1.Helpers;
 
 namespace AzureBlob1.Services;
 
@@ -12,11 +11,8 @@ public class FileService
 
     private readonly BlobContainerClient _filesContainer;
 
-   
-
     public FileService()
     {
-       
         var credential = new StorageSharedKeyCredential(_storageAccount, _key);
         var blobUri = $"https://{_storageAccount}.blob.core.windows.net";
         var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
@@ -61,8 +57,7 @@ public class FileService
     }
 
 
-
-    public async Task<BlobDto?> DownlaodAsync(string blobFilename)
+    public async Task<Stream?> DownloadAsync(string blobFilename)
     {
         BlobClient file = _filesContainer.GetBlobClient(blobFilename);
 
@@ -73,14 +68,12 @@ public class FileService
 
             var content = await file.DownloadContentAsync();
 
-            string name = blobFilename;
-            string contentType = content.Value.Details.ContentType;
-
-            return new BlobDto { Content = blobContent, Name = name, ContentType = contentType };
+            return blobContent;
         }
 
         return null;
     }
+
 
     public async Task<BlobResponseDto> DeleteAsync(string blobFilename)
     {
@@ -88,10 +81,12 @@ public class FileService
 
         await file.DeleteAsync();
 
-        return new BlobResponseDto { Error = false, Status = $"File: {blobFilename} has been successfully  deleted." };
-
+        return new BlobResponseDto
+        {
+            Error = false,
+            Status = $"File: {blobFilename} has been successfully  deleted."
+        };
     }
-
 
 
 }

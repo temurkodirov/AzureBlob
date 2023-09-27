@@ -14,6 +14,7 @@ public class VideoService : IVideoService
 {
     private readonly string _storageAccount = "databaza7730";
     private readonly string _key = "eMDy0vMBqb/3O6AQp8Oj3QVXdkARXtxRPZeq5Uqc1gtScDlZgQvvUrShcZNKByUsfDOwRSTKJdsx+AStk1Kxig==";
+   
     private readonly BlobContainerClient _filesContainer;
     private readonly IVideoDurationHelper _duration;
     private readonly IRepository<Video> _repository;
@@ -112,17 +113,6 @@ public class VideoService : IVideoService
         streamImage.Close();
 
     
-        
-        //Video video = new Video();
-        //video.Title = dto.Title;
-        //video.VideoUrl = subPathVideo;
-        //video.VideoImageUrl = subPathImage;
-        //video.VideoDuration = await _duration.GetVideoDurationAsync(dto.Video);
-        //video.VideoName = newVideoName;
-        //video.VideoImageName = newImageName;
-
-        //await _repository.AddAsync(video);
-        //await _repository.SaveAsync();
         return true;
     }
 
@@ -176,38 +166,4 @@ public class VideoService : IVideoService
         return true;
     }
 
-    //public async Task<bool> UploadAsync(VideoDto dto)
-    //{
-
-    //    Video video = new Video();
-
-    //    string videoName = MediaHelper.MakeVideoName(dto.Video.FileName);
-    //    string imageName = MediaHelper.MakeImageName(dto.VideoImage.FileName);
-
-    //    BlobClient videoUpload = _filesContainer.GetBlobClient(videoName);
-    //    await using (Stream streamVideo = dto.Video.OpenReadStream())
-    //    {
-    //        await videoUpload.UploadAsync(streamVideo);
-    //    }
-
-    //    BlobClient imageUpload = _filesContainer.GetBlobClient(imageName);
-    //    await using (Stream streamImage = dto.VideoImage.OpenReadStream())
-    //    {
-    //        await imageUpload.UploadAsync(streamImage);
-    //    }
-
-    //    video.Title = dto.Title;
-    //    video.VideoDuration = await _duration.GetVideoDurationAsync(dto.Video);
-    //    video.VideoUrl = videoUpload.Uri.AbsoluteUri;
-    //    video.VideoName = videoName;
-    //    video.VideoImageUrl = imageUpload.Uri.AbsoluteUri;
-    //    video.VideoImageName = imageName;
-
-    //    await _repository.AddAsync(video);
-    //    await _repository.SaveAsync();
-
-
-
-    //    return true;
-    //}
 }

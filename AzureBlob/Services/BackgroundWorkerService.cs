@@ -1,6 +1,7 @@
 ﻿
 using Azure.Storage;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using AzureBlob1.Entities;
 using AzureBlob1.Helpers;
 using AzureBlob1.Repositories;
@@ -28,6 +29,7 @@ namespace AzureBlob1.Services
             var credential = new StorageSharedKeyCredential(_storageAccount, _key);
             var blobUri = $"https://{_storageAccount}.blob.core.windows.net";
             var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
+                
             _filesContainer = blobServiceClient.GetBlobContainerClient("bukontainer");
         }
 
@@ -53,7 +55,6 @@ namespace AzureBlob1.Services
                             using (IServiceScope scope = _serviceProvider.CreateScope())
                             {
                                 var _repository = scope.ServiceProvider.GetRequiredService<IRepository<Video>>();
-                                //var _videoDuration = scope.ServiceProvider.GetRequiredService<IVideoDurationHelper>();
 
                                 Video saveVideo = new Video();
 
@@ -72,29 +73,36 @@ namespace AzureBlob1.Services
                                     var video = new FormFile(baseStream: fileStream, baseStreamOffset: 0,
                                         length: new FileInfo(file).Length, name: Guid.NewGuid().ToString(), fileName: Path.GetFileName(file));
 
-                                    saveVideo.VideoDuration = 550;
-                                   // saveVideo.VideoDuration = await _videoDuration.GetVideoDurationAsync(video);
+
+                                    if(OperatingSystem.IsWindows())
+                                    {
+                                        var _videoDuration = scope.ServiceProvider.GetRequiredService<IVideoDurationHelper>();
+                                        saveVideo.VideoDuration = await _videoDuration.GetVideoDurationAsync(video);
+                                    }
+                                    else saveVideo.VideoDuration = 0;
+
 
                                     saveVideo.VideoName = video.FileName;
-
-                                    //BlobUploadOptions videoUploadOptions = new BlobUploadOptions
-                                    //{
-                                    //    HttpHeaders = new BlobHttpHeaders
-                                    //    {
-                                    //        ContentType = video.ContentType
-                                    //    }
-                                    //};
-
+                                    string contentType = "video/mp4";
+                                    BlobUploadOptions videoUploadOptions = new BlobUploadOptions
+                                    {
+                                        HttpHeaders = new BlobHttpHeaders
+                                        {
+                                            ContentType = contentType
+                                        }
+                                    };
                                     // Upload the file to Azure Blob Storage
                                     BlobClient videoUpload = _filesContainer.GetBlobClient(Path.GetFileName(file));
+                                    
                                     await using (Stream streamVideo = video.OpenReadStream())
                                     {
-                                        await videoUpload.UploadAsync(streamVideo);
-
-                                        //await videoUpload.UploadAsync(streamVideo, videoUploadOptions);
+                                        
+                                        await videoUpload.UploadAsync(streamVideo, videoUploadOptions);
+                                        
                                         streamVideo.Dispose();
                                         streamVideo.Close();
                                     }
+
                                     saveVideo.VideoUrl = videoUpload.Uri.AbsoluteUri;
 
                                     fileStream.Dispose();
@@ -111,7 +119,6 @@ namespace AzureBlob1.Services
                                 foreach (string file in ImagesWithName)
                                 {
                                     // Process each file
-
                                     var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
                                     var image = new FormFile(baseStream: fileStream, baseStreamOffset: 0,
                                         length: new FileInfo(file).Length, name: Guid.NewGuid().ToString(), fileName: Path.GetFileName(file));
@@ -130,7 +137,6 @@ namespace AzureBlob1.Services
                                     {
                                         await imageUpload.UploadAsync(streamImage);
 
-                                        //await imageUpload.UploadAsync(streamImage, imageUploadOptions);
                                         streamImage.Dispose();
                                         streamImage.Close();
                                     }
